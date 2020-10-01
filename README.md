@@ -49,3 +49,11 @@
 - `bss` storing un-initialized data `int i[1000]`
 - `stack` handling states of function calls
 - `heap` allocate memory dynamically for program
+
+# registers
+
+store running states of computers
+- `PC`: program counter, stores memory address that stores the **next** instruction to be run
+- `SP`: stack pointer, which point to the top of the stack. Stack is stored from high address to low address, so when we push a new element, the `SP` decreases
+- `BP`: base pointer, points to some elements on the stack, used in function calls
+- `AX`: general register that store the result of an instruction

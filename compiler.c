@@ -10,11 +10,17 @@ int poolsize;         // default size of text/data/stack
 int line;             // line number
 
 // Memory
-int *text,     // text segment
-    *old_text, // for dump text segment
-    *stack;    // stack
-char *data;    // data segment
+int *text,            // text segment
+    *old_text,        // for dump text segment
+    *stack;           // stack
+char *data;           // data segment
 
+// Register for virtual machine
+int *pc,              // program counter 
+    *bq,              // stack pointer
+    *sp,              // base pointer
+    ax,               // general register
+    cycle;
 
 void next() {
     token = *src++;
@@ -83,6 +89,10 @@ int main(int argc, char **argv)
     memset(text, 0, poolsize);
     memset(data, 0, poolsize);
     memset(stack, 0, poolsize);
+
+    // Register
+    bq = sp = (int *) ((int)stack + poolsize);
+    ax = 0;
 
     program();
     return eval();
