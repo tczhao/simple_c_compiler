@@ -9,6 +9,13 @@ char *src, *old_src;  // pointer to source code string;
 int poolsize;         // default size of text/data/stack
 int line;             // line number
 
+// Memory
+int *text,     // text segment
+    *old_text, // for dump text segment
+    *stack;    // stack
+char *data;    // data segment
+
+
 void next() {
     token = *src++;
     return;
@@ -58,6 +65,24 @@ int main(int argc, char **argv)
 
     src[i] = 0; // add EOF character
     close(fd);
+
+    // Memory - allocate memory for virtual machine
+    if (!(text = old_text = malloc(poolsize))) {
+        printf("cloud not malloc(%d) for text area\n", poolsize);
+        return -1;
+    }
+    if (!(data = malloc(poolsize))) {
+        printf("could not malloc(%d) for data area\n", poolsize);
+        return -1;
+    }
+    if (!(stack = malloc(poolsize))) {
+        printf("could not malloc(%d) for stack area\n", poolsize);
+        return -1;
+    }
+
+    memset(text, 0, poolsize);
+    memset(data, 0, poolsize);
+    memset(stack, 0, poolsize);
 
     program();
     return eval();

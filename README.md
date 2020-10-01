@@ -22,3 +22,30 @@
 - Machine Independent Code Improver
 - Target Code Generator
 - Machine Dependent Code Improver
+
+# memory
+
+```
++------------------+
+|    stack   |     |      high address
+|    ...     v     |
+|                  |
+|                  |
+|                  |
+|                  |
+|    ...     ^     |
+|    heap    |     |
++------------------+
+| bss  segment     |
++------------------+
+| data segment     |
++------------------+
+| text segment     |      low address
++------------------+
+```
+
+- `text` storing code(instructions)
+- `data` storing initialized data `int i = 10`
+- `bss` storing un-initialized data `int i[1000]`
+- `stack` handling states of function calls
+- `heap` allocate memory dynamically for program
