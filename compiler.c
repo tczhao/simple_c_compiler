@@ -22,15 +22,23 @@ int *pc,              // program counter
     ax,               // general register
     cycle;
 
+// Instructions
+enum { LEA ,IMM ,JMP ,CALL,JZ  ,JNZ ,ENT ,ADJ ,LEV ,LI  ,LC  ,SI  ,SC  ,PUSH,
+       OR  ,XOR ,AND ,EQ  ,NE  ,LT  ,GT  ,LE  ,GE  ,SHL ,SHR ,ADD ,SUB ,MUL ,DIV ,MOD ,
+       OPEN,READ,CLOS,PRTF,MALC,MSET,MCMP,EXIT };
+
+// Lexical analyzer
 void next() {
     token = *src++;
     return;
 }
 
+// Parser
 void expression(int level) {
     // do nothing
 }
 
+// Parser entrance
 void program() {
     next();                  // get next token
     while (token > 0) {
@@ -39,7 +47,17 @@ void program() {
     }
 }
 
-int eval() { // do nothing yet
+// Interpret on custom vm
+int eval() {
+    int op, *tmp;
+    while(1) {
+        op = *pc++; // get next operation code
+        if (op == IMM)      {ax = *pc++;}
+        else if (op == LC)  {ax = *(char *)ax;}
+        else if (op == LI)  {ax = *(int *)ax;}
+        else if (op == SC)  {ax = *(int *)*sp++ = ax;}
+        else if (op == SI)  {*(int *)*sp++ = ax;}
+    }
     return 0;
 }
 

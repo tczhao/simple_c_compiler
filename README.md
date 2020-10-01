@@ -1,10 +1,5 @@
 # simple_c_compiler
 
-- next() - lexical analyzer
-- program() - entrance of parser
-- expression(level) - parser
-- eval() - interpret target instruction
-
 # ideal compiler
 
 - Scanner (Lexical Analyzer)
@@ -57,3 +52,17 @@ store running states of computers
 - `SP`: stack pointer, which point to the top of the stack. Stack is stored from high address to low address, so when we push a new element, the `SP` decreases
 - `BP`: base pointer, points to some elements on the stack, used in function calls
 - `AX`: general register that store the result of an instruction
+
+# instruction set
+
+a set of instruction that CPU can understand
+
+- `MOV`
+	- move data into registers or memory
+	- in `x86`, `MOV dest, source`
+	- our implementation, the `MOV` is replace by
+		- `IMM <num>` to put immediate `<num>` into register `AX`
+		- `LC` to load a character into `AX` from a memory address which is stored in `AX` before execution
+		- `LI` to load a integer into `AX` from a memory address which is stored in `AX` before execution
+		- `SC` to store the character in `AX` into the memory whose address is stored on the top of the stack
+		- `SI` to store the integer in `AX` into the memory whose address is stored on the top of the stack
