@@ -58,6 +58,7 @@ int eval() {
         else if (op == SC)   {ax = *(int *)*sp++ = ax;}
         else if (op == SI)   {*(int *)*sp++ = ax;}
         else if (op == PUSH) {*--sp = ax;}
+        else if (op == JMP)  {pc = (int *)*pc;}
     }
     return 0;
 }

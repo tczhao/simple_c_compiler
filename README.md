@@ -70,3 +70,5 @@ a set of instruction that CPU can understand
 	- in `x86` can push an immediate value or a register's value onto the stack
 	- our implementation
 		- `PUSH` push the value in `AX` onto the stack
+- `JMP`
+	- `JMP <addr>` will uncondtionally set the value `PC` register to `<addr>`
