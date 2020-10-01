@@ -76,3 +76,10 @@ a set of instruction that CPU can understand
 - `JZ/JNZ`
 	- conditional jump to implement `if` statement
 	- jump when `AX` is `0` or not
+- `CALL`
+	- to call the function whose starting point is `<addr>` and fetch the bookkeeping information to resume previous execution
+	- Our convention, returning value is store into AX regardless of value or memory address
+	- C convention
+		- It is caller's duty to push the arguments onto stack
+		- After function call returns, caller need to pop out the argument
+		- The arguments are pushed in reversed order
