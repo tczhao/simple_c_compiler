@@ -72,3 +72,7 @@ a set of instruction that CPU can understand
 		- `PUSH` push the value in `AX` onto the stack
 - `JMP`
 	- `JMP <addr>` will uncondtionally set the value `PC` register to `<addr>`
+	- `*pc` stores the argument of `JMP` instructuion
+- `JZ/JNZ`
+	- conditional jump to implement `if` statement
+	- jump when `AX` is `0` or not
