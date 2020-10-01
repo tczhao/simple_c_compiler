@@ -66,3 +66,7 @@ a set of instruction that CPU can understand
 		- `LI` to load a integer into `AX` from a memory address which is stored in `AX` before execution
 		- `SC` to store the character in `AX` into the memory whose address is stored on the top of the stack
 		- `SI` to store the integer in `AX` into the memory whose address is stored on the top of the stack
+- `PUSH`
+	- in `x86` can push an immediate value or a register's value onto the stack
+	- our implementation
+		- `PUSH` push the value in `AX` onto the stack

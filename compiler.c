@@ -52,11 +52,12 @@ int eval() {
     int op, *tmp;
     while(1) {
         op = *pc++; // get next operation code
-        if (op == IMM)      {ax = *pc++;}
-        else if (op == LC)  {ax = *(char *)ax;}
-        else if (op == LI)  {ax = *(int *)ax;}
-        else if (op == SC)  {ax = *(int *)*sp++ = ax;}
-        else if (op == SI)  {*(int *)*sp++ = ax;}
+        if (op == IMM)       {ax = *pc++;}
+        else if (op == LC)   {ax = *(char *)ax;}
+        else if (op == LI)   {ax = *(int *)ax;}
+        else if (op == SC)   {ax = *(int *)*sp++ = ax;}
+        else if (op == SI)   {*(int *)*sp++ = ax;}
+        else if (op == PUSH) {*--sp = ax;}
     }
     return 0;
 }
