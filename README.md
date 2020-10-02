@@ -1,5 +1,12 @@
 # simple_c_compiler
 
+Simple compiler that targets a vm with custom instruction
+
+```
+gcc compiler.c
+./a.out hello.c
+```
+
 # ideal compiler
 
 - Scanner (Lexical Analyzer)
