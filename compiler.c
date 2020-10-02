@@ -17,7 +17,7 @@ char *data;           // data segment
 
 // Register for virtual machine
 int *pc,              // program counter 
-    *bq,              // base pointer
+    *bp,              // base pointer
     *sp,              // stack pointer
     ax,               // general register
     cycle;
@@ -147,7 +147,7 @@ int main(int argc, char **argv)
     memset(stack, 0, poolsize);
 
     // Register
-    bq = sp = (int *) ((int)stack + poolsize);
+    bp = sp = (int *) ((int)stack + poolsize);
     ax = 0;
 
     i = 0;
@@ -160,7 +160,7 @@ int main(int argc, char **argv)
     text[i++] = PUSH;
     text[i++] = EXIT;
     pc = text;
-    
+
     program();
     return eval();
 }
