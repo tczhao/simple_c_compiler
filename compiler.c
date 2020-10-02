@@ -17,8 +17,8 @@ char *data;           // data segment
 
 // Register for virtual machine
 int *pc,              // program counter 
-    *bq,              // stack pointer
-    *sp,              // base pointer
+    *bq,              // base pointer
+    *sp,              // stack pointer
     ax,               // general register
     cycle;
 
@@ -52,17 +52,18 @@ int eval() {
     int op, *tmp;
     while(1) {
         op = *pc++; // get next operation code
-        if (op == IMM)       {ax = *pc++;}
-        else if (op == LC)   {ax = *(char *)ax;}
-        else if (op == LI)   {ax = *(int *)ax;}
-        else if (op == SC)   {ax = *(int *)*sp++ = ax;}
-        else if (op == SI)   {*(int *)*sp++ = ax;}
-        else if (op == PUSH) {*--sp = ax;}
-        else if (op == JMP)  {pc = (int *)*pc;}
-        else if (op == JZ)   {pc = ax ? pc + 1: (int *)*pc;}
-        else if (op == JNZ)  {pc = ax ? (int *)*pc: pc + 1;}
-        else if (op == CALL) {*--sp = (int)(pc+1); pc = (int *)*pc;}
-        //else if (op == RET) {pc = (int *)*sp++;}
+        if (op == IMM)       {ax = *pc++;}                                   // load immediate value to ax
+        else if (op == LC)   {ax = *(char *)ax;}                             // load character to ax, address in ax
+        else if (op == LI)   {ax = *(int *)ax;}                              // load integer to ax, address in ax
+        else if (op == SC)   {ax = *(char *)*sp++ = ax;}                     // save character to address, value in ax, address in stack
+        else if (op == SI)   {*(int *)*sp++ = ax;}                           // save integer to address, value in ax, address in stack
+        else if (op == PUSH) {*--sp = ax;}                                   // push the value of ax onto the stack
+        else if (op == JMP)  {pc = (int *)*pc;}                              // jump to the address
+        else if (op == JZ)   {pc = ax ? pc + 1: (int *)*pc;}                 // jump if ax is 0
+        else if (op == JNZ)  {pc = ax ? (int *)*pc: pc + 1;}                 // jump if ax is not 0
+        else if (op == CALL) {*--sp = (int)(pc+1); pc = (int *)*pc;}         // call subroutine
+        //else if (op == RET) {pc = (int *)*sp++;}                           // return from subroutine
+        else if (op == ENT)  {*--sp = (int)bp; bp = sp; sp = sp - *pc++;}    // make new stack frame
     }
     return 0;
 }

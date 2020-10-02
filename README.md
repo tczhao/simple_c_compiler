@@ -83,3 +83,6 @@ a set of instruction that CPU can understand
 		- It is caller's duty to push the arguments onto stack
 		- After function call returns, caller need to pop out the argument
 		- The arguments are pushed in reversed order
+- `ENT`
+	- called when about to enter the function call to "make a new calling frame"
+	- store the current `PC` value onto the stack, and save some space(`<size>` bytes) to store the local variables for function
