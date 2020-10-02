@@ -86,3 +86,10 @@ a set of instruction that CPU can understand
 - `ENT`
 	- called when about to enter the function call to "make a new calling frame"
 	- store the current `PC` value onto the stack, and save some space(`<size>` bytes) to store the local variables for function
+- `ADJ`
+	- to adjust the stack, to "remove arguments from frame"
+- `LEV`
+	- to accomplish `MOV` `POP` `RET`
+	- function call return
+- `LEA`
+	- fetch sub function argument
