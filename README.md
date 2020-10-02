@@ -9,8 +9,15 @@ gcc compiler.c
 
 # ideal compiler
 
+```
+                   +-------+                      +--------+
+-- source code --> | lexer | --> token stream --> | parser | --> assembly
+                   +-------+                      +--------+
+```
+
 - Scanner (Lexical Analyzer)
 	- converts the source program's stream of characters into a stream of tokens
+	- to simplify the parser by converting the stream of source code into token stream
 		- remove comments
 		- expand macros
 		- check indentation
@@ -100,3 +107,11 @@ a set of instruction that CPU can understand
 	- function call return
 - `LEA`
 	- fetch sub function argument
+
+# lexer
+
+- lexical analysis is the process of converting a sequence of characters (such as in a computer program or web page) into a sequence of tokens (strings with an identified "meaning").
+- Lexer is used to pre-process the source code, so as to reduce the complexity of parser.
+- Lexer is also a kind of compiler which consumes source code and output token stream.
+- lookahead(k) is used to fully determine the meaning of current character/token.
+- e.g. Normally we represent the token as a pair: (token type, token value). For example, if a program's source file contains string: "998", the lexer will treat it as token (Number, 998) meaning it is a number with value of 998.
