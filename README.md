@@ -7,6 +7,13 @@ gcc compiler.c
 ./a.out hello.c
 ```
 
+Topdown parser calculator
+```
+gcc topdown_parser_calculator.c
+./a.out
+3*2+1
+```
+
 # ideal compiler
 
 ```
