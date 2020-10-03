@@ -115,3 +115,67 @@ a set of instruction that CPU can understand
 - Lexer is also a kind of compiler which consumes source code and output token stream.
 - lookahead(k) is used to fully determine the meaning of current character/token.
 - e.g. Normally we represent the token as a pair: (token type, token value). For example, if a program's source file contains string: "998", the lexer will treat it as token (Number, 998) meaning it is a number with value of 998.
+
+# Top-down parsing
+
+start with a non-terminator and recursively check the source code to replace the non-terminators with its alternatives until no non-terminator is left
+
+# Terminator and Non-terminator
+
+They are terms used in Backus-Naur Form (BNF, a language that describe grammars)
+
+```
+<expr> ::= <expr> + <term>
+         | <expr> - <term>
+         | <term>
+
+<term> ::= <term> * <factor>
+         | <term> / <factor>
+         | <factor>
+
+<factor> ::= ( <expr> )
+           | Num
+```
+
+item enclosed by `<>` is called a `Non-terminator`
+- The can get replaced with items on the right hand of `::=`
+- `|` means alternatives
+
+Terminator
+- Those do not appear on the left side of `::=`, e.g. `+`, `(`, `Num`, often are the tokens we get from the lexer
+
+calculator example `3 * (4 + 2)`
+```
+1. <expr> => <expr>
+2.           => <term>        * <factor>
+3.              => <factor>     |
+4.                 => Num (3)   |
+5.                              => ( <expr> )
+6.                                   => <expr>           + <term>
+7.                                      => <term>          |
+8.                                         => <factor>     |
+9.                                            => Num (4)   |
+10.                                                        => <factor>
+11.                                                           => Num (2)
+```
+
+left recursion
+- translate into non left-recursive equivalent to prevent never exit
+```
+<expr> ::= <term> <expr_tail>
+
+<expr_tail> ::= + <term> <expr_tail>
+              | - <term> <expr_tail>
+              | <empty>
+
+<term> ::= <factor> <term_tail>
+
+<term_tail> ::= * <factor> <term_tail>
+              | / <factor> <term_tail>
+              | <empty>
+
+<factor> ::= ( <expr> )
+           | Num
+```
+
+
