@@ -1253,31 +1253,13 @@ int eval() {
 int main(int argc, char **argv)
 {
     int i, fd;
+    int *tmp;
 
     argc--;
     argv++;
 
     poolsize = 256 * 1024; // arbitrary size
     line = 1;
-
-    if ((fd = open(*argv, 0)) < 0) {
-        printf("could not open(%s)\n", *argv);
-        return -1;
-    }
-
-    if (!(src = old_src = malloc(poolsize))) {
-        printf("could not malloc(%d) for source area\n", poolsize);
-        return -1;
-    }
-
-    // read the source file
-    if ((i = read(fd, src, poolsize-1)) <= 0) {
-        printf("read() returned %d\n", i);
-        return -1;
-    }
-
-    src[i] = 0; // add EOF character
-    close(fd);
 
     // Memory - allocate memory for virtual machine
     if (!(text = old_text = malloc(poolsize))) {
@@ -1292,25 +1274,19 @@ int main(int argc, char **argv)
         printf("could not malloc(%d) for stack area\n", poolsize);
         return -1;
     }
+    if (!(symbols = malloc(poolsize))) {
+        printf("could not malloc(%d) for symbol table\n", poolsize);
+        return -1;
+    }
 
     memset(text, 0, poolsize);
     memset(data, 0, poolsize);
     memset(stack, 0, poolsize);
+    memset(symbols, 0, poolsize);
 
     // Register
     bp = sp = (int *) ((int)stack + poolsize);
     ax = 0;
-
-    i = 0;
-    text[i++] = IMM;
-    text[i++] = 10;
-    text[i++] = PUSH;
-    text[i++] = IMM;
-    text[i++] = 20;
-    text[i++] = ADD;
-    text[i++] = PUSH;
-    text[i++] = EXIT;
-    pc = text;
 
     src = "char else enum if int return sizeof while "
           "open read close printf malloc memset memcmp exit void main";
@@ -1335,6 +1311,39 @@ int main(int argc, char **argv)
     next(); current_id[Token] = Char; // handle void type
     next(); idmain = current_id; // keep track of main
 
+    if ((fd = open(*argv, 0)) < 0) {
+        printf("could not open(%s)\n", *argv);
+        return -1;
+    }
+
+    if (!(src = old_src = malloc(poolsize))) {
+        printf("could not malloc(%d) for source area\n", poolsize);
+        return -1;
+    }
+
+    // read the source file
+    if ((i = read(fd, src, poolsize-1)) <= 0) {
+        printf("read() returned %d\n", i);
+        return -1;
+    }
+
+    src[i] = 0; // add EOF character
+    close(fd);
+    
     program();
+
+    if (!(pc = (int *)idmain[Value])) {
+        printf("main() not defined\n");
+        return -1;
+    }
+
+    // setup stack
+    sp = (int *)((int)stack + poolsize);
+    *--sp = EXIT; // call exit if main returns
+    *--sp = PUSH; tmp = sp;
+    *--sp = argc;
+    *--sp = (int)argv;
+    *--sp = (int)tmp;
+
     return eval();
 }
