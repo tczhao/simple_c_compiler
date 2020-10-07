@@ -14,6 +14,72 @@ gcc topdown_parser_calculator.c
 3*2+1
 ```
 
+```
+init
+- text (text segment)
+- data (data segment)
+- stack (stack)
+- symbol (symbol table)
+
+- add default keywords to symbol
+- add default library to symbol
+
+-> read source file
+	-> get next token
+		-> while token exist
+			-> global_declaration()
+				-> add enum to symbol
+				-> determine char|int
+				   - determine pointer (token Mul -> Type = basetype + PTR)
+				   - validate global declaration
+				   - check duplicate declaration
+						-> function_declaration() (Class:Fun,Value:text+1)
+							- function_parameter()
+								- params=0
+								- INT|CHAR|pointer
+								- validate,duplicate checking
+								- current_id:Bxxx=Class(Loc)/Type/Value(params++)
+								- index_of_bp = params+1;
+							- function_body()
+								- local variable declaration
+								- *++text = ENT
+								- *++text = pos_local - index_of_bq (length of local variable address)
+								- statement()
+									-> token: If
+										- within('()') expression(Assign)
+										- *++text = JZ; b = ++text
+										- statement()
+										- token: Else
+											- *b = (int)(text+3); *++text = JMP; b = ++text
+											- statement()
+										- *b = (int)(text+1)
+									-> token: While
+										- a = text+1
+										- within('()') expression(Assign)
+										- *++text = JZ; b = ++text
+										- statement()
+										- *++text = JMP; *++text = (int)a; b = (int)(text+1)
+									-> token: '{'
+										- within('{}') statement()
+									-> token: Return
+										- expression(Assign)
+									-> token: ';'
+									-> expression(Assign)
+								- *++text = LEV
+							- unwind local declaration, current_id:Class/Type/Value=Bxxx
+						-> variable_declaration()
+							- Class = Glo
+							- Value = (int)data (memory address)
+				-> get next token
+	-> pc = Value: text
+	-> setup stack
+		- EXIT
+		- PUSH
+		- argc
+		- argv
+		- *PUSH
+```
+
 # ideal compiler
 
 ```
@@ -122,6 +188,43 @@ a set of instruction that CPU can understand
 - Lexer is also a kind of compiler which consumes source code and output token stream.
 - lookahead(k) is used to fully determine the meaning of current character/token.
 - e.g. Normally we represent the token as a pair: (token type, token value). For example, if a program's source file contains string: "998", the lexer will treat it as token (Number, 998) meaning it is a number with value of 998.
+
+Symbol table is an important data structure created and maintained by compilers in order to store information about the occurrence of various entities such as variable names, function names, objects, classes, interfaces
+
+```
+struct identifier {
+    int token;
+    int hash;
+    char * name;
+    int class;
+    int type;
+    int value;
+    int Bclass;
+    int Btype;
+    int Bvalue;
+}
+```
+
+- `token`: is the token type of an identifier. Theoretically it should be
+   fixed to type `Id`. But it is not true because we will add keywords(e.g
+   `if`, `while`) as special kinds of identifier.
+- `hash`: the hash value of the name of the identifier, to speed up the
+   comparision of table lookup.
+- `name`: well, name of the identifier.
+- `class`: Whether the identifier is global, local or constants.
+- `type`: type of the identifier, `int`, `char` or pointer.
+- `value`: the value of the variable that the identifier points to.
+- `BXXX`: local variable can shadow global variable. It is used to store
+   global ones if that happens.
+
+our implementation
+
+```
+----+-----+----+----+----+-----+-----+-----+------+------+----
+ .. |token|hash|name|type|class|value|btype|bclass|bvalue| ..
+----+-----+----+----+----+-----+-----+-----+------+------+----
+    |<---       one single identifier                --->|
+```
 
 # Top-down parsing
 
